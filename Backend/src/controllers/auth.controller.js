@@ -19,7 +19,7 @@ async function registerUserController(req, res) {
     }
 
     const isUserAlreadyExists = await userModel.findOne({
-        $or: [ { username }, { email } ]
+        $or: [{ username }, { email }]
     })
 
     if (isUserAlreadyExists) {
@@ -41,9 +41,7 @@ async function registerUserController(req, res) {
         process.env.JWT_SECRET,
         { expiresIn: "1d" }
     )
-
     res.cookie("token", token)
-
 
     res.status(201).json({
         message: "User registered successfully",
@@ -55,7 +53,6 @@ async function registerUserController(req, res) {
     })
 
 }
-
 
 /**
  * @name loginUserController
