@@ -26,7 +26,6 @@ export const generateInterviewReport = async ({ jobDescription, selfDescription,
 
 }
 
-
 /**
  * @description Service to get interview report by interviewId.
  */
@@ -36,7 +35,6 @@ export const getInterviewReportById = async (interviewId) => {
     return response.data
 }
 
-
 /**
  * @description Service to get all interview reports of logged in user.
  */
@@ -45,7 +43,6 @@ export const getAllInterviewReports = async () => {
 
     return response.data
 }
-
 
 /**
  * @description Service to generate resume pdf based on user self description, resume content and job description.
