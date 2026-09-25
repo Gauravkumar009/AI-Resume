@@ -5,9 +5,11 @@ import { useNavigate } from 'react-router'
 
 const Home = () => {
 
-    const { loading, generateReport,reports } = useInterview()
+    const { loading, generateReport, reports } = useInterview()
     const [ jobDescription, setJobDescription ] = useState("")
     const [ selfDescription, setSelfDescription ] = useState("")
+    const [ selectedFileName, setSelectedFileName ] = useState("")
+    const [ isDragOver, setIsDragOver ] = useState(false)
     const resumeInputRef = useRef()
 
     const navigate = useNavigate()
@@ -28,6 +30,29 @@ const Home = () => {
         if (data) {
             navigate(`/interview/${data._id}`)
         }
+    }
+
+    const handleFileChange = (file) => {
+        if (!file) return
+        // Transfer to the hidden input via DataTransfer so ref always has the file
+        const dt = new DataTransfer()
+        dt.items.add(file)
+        resumeInputRef.current.files = dt.files
+        setSelectedFileName(file.name)
+    }
+
+    const handleDragOver = (e) => {
+        e.preventDefault()
+        setIsDragOver(true)
+    }
+
+    const handleDragLeave = () => setIsDragOver(false)
+
+    const handleDrop = (e) => {
+        e.preventDefault()
+        setIsDragOver(false)
+        const file = e.dataTransfer.files[ 0 ]
+        handleFileChange(file)
     }
 
     if (loading) {
@@ -87,13 +112,35 @@ const Home = () => {
                                 Upload Resume
                                 <span className='badge badge--best'>Best Results</span>
                             </label>
-                            <label className='dropzone' htmlFor='resume'>
+                            <label
+                                className={`dropzone ${isDragOver ? 'dropzone--active' : ''} ${selectedFileName ? 'dropzone--selected' : ''}`}
+                                htmlFor='resume'
+                                onDragOver={handleDragOver}
+                                onDragLeave={handleDragLeave}
+                                onDrop={handleDrop}
+                            >
                                 <span className='dropzone__icon'>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 16 12 12 8 16" /><line x1="12" y1="12" x2="12" y2="21" /><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" /></svg>
+                                    {selectedFileName ? (
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                                    ) : (
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 16 12 12 8 16" /><line x1="12" y1="12" x2="12" y2="21" /><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" /></svg>
+                                    )}
                                 </span>
-                                <p className='dropzone__title'>Click to upload or drag &amp; drop</p>
-                                <p className='dropzone__subtitle'>PDF or DOCX (Max 5MB)</p>
-                                <input ref={resumeInputRef} hidden type='file' id='resume' name='resume' accept='.pdf,.docx' />
+                                <p className='dropzone__title'>
+                                    {selectedFileName ? selectedFileName : 'Click to upload or drag & drop'}
+                                </p>
+                                <p className='dropzone__subtitle'>
+                                    {selectedFileName ? '✓ File ready to upload' : 'PDF or DOCX (Max 5MB)'}
+                                </p>
+                                <input
+                                    ref={resumeInputRef}
+                                    hidden
+                                    type='file'
+                                    id='resume'
+                                    name='resume'
+                                    accept='.pdf,.docx'
+                                    onChange={(e) => handleFileChange(e.target.files[ 0 ])}
+                                />
                             </label>
                         </div>
 
