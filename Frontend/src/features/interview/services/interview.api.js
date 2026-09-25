@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || "https://ai-resume-4-ftf9.onrender.com",
+    baseURL: import.meta.env.VITE_API_URL || "https://ai-resume-1-c20y.onrender.com",
     withCredentials: true,
 })
 
