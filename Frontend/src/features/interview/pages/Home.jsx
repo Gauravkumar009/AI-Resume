@@ -19,8 +19,8 @@ const Home = () => {
             alert("Please enter a Job Description before generating.")
             return
         }
-        if (!resumeFile && !selfDescription.trim()) {
-            alert("Please upload a Resume or enter a Self Description.")
+        if (!resumeFile) {
+            alert("Please upload a Resume file (PDF or DOCX).")
             return
         }
 
