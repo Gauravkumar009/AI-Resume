@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router'
 import "../auth.form.scss"
 import { useAuth } from '../hooks/useAuth'
@@ -10,34 +10,42 @@ const Login = () => {
 
     const [ email, setEmail ] = useState("")
     const [ password, setPassword ] = useState("")
+    const [ error, setError ] = useState("")
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        await handleLogin({email,password})
-        navigate('/')
+        setError("")
+        try {
+            const user = await handleLogin({ email, password })
+            if (user) {
+                navigate('/')
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || "Invalid email or password. Please try again.")
+        }
     }
 
-    if(loading){
-        return (<main><h1>Loading.......</h1></main>)
+    if (loading) {
+        return (<main><h1>Loading...</h1></main>)
     }
-
 
     return (
         <main>
             <div className="form-container">
                 <h1>Login</h1>
+                {error && <p style={{ color: "#e63946", marginBottom: "1rem", fontSize: "0.9rem" }}>{error}</p>}
                 <form onSubmit={handleSubmit}>
                     <div className="input-group">
                         <label htmlFor="email">Email</label>
                         <input
                             onChange={(e) => { setEmail(e.target.value) }}
-                            type="email" id="email" name='email' placeholder='Enter email address' />
+                            type="email" id="email" name='email' placeholder='Enter email address' required />
                     </div>
                     <div className="input-group">
                         <label htmlFor="password">Password</label>
                         <input
                             onChange={(e) => { setPassword(e.target.value) }}
-                            type="password" id="password" name='password' placeholder='Enter password' />
+                            type="password" id="password" name='password' placeholder='Enter password' required />
                     </div>
                     <button className='button primary-button' >Login</button>
                 </form>

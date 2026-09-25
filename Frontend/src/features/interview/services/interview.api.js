@@ -1,10 +1,9 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "https://ai-resume-4-fit9.onrender.com",
+    baseURL: import.meta.env.VITE_API_URL || "https://ai-resume-4-ftf9.onrender.com",
     withCredentials: true,
 })
-
 
 /**
  * @description Service to generate interview report based on user self description, resume and job description.
